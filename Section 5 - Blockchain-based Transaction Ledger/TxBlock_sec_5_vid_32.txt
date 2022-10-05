@@ -1,0 +1,65 @@
+# TxBlock
+from BlockChain import CBlock
+from Signatures import generate_keys, sign, verify
+from Transactions import Tx
+import pickle
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.backends import default_backend
+
+class TxBlock(CBlock):
+    def __init__(self, previousBlick):
+        pass
+    def addTx(self, Tx_in):
+        pass
+    def is_valid(self):
+        return false
+
+if __name__ == "__main__":
+    pr1, pu1 = generate_keys()
+    pr2, pu2 = generate_keys()
+    pr3, pu3 = generate_keys()
+
+    Tx1 = Tx()
+    Tx1.add_input(pu1, 1)
+    Tx1.add_output(pu2, 1)
+    Tx1.sign(pr1)
+
+    print(Tx1.is_valid())
+
+    message = b"Some text"
+    sig = sign(message, pr1)
+    print(verify(message, sig, pu1))
+
+    # pickle - module for python that heklps store to the disk
+    addrfile = open("public.dat", "wb")
+##    pu_ser = pu1.public_bytes(                                     # method used to express a pu and pr key
+##        encoding=serialization.Encoding.PEM,
+##        format=serialization.PublicFormat.SubjectPublicKeyInfo  # format used for PEM
+##    )
+    pickle.dump(pu1, addrfile)
+    #pickle.dump(Tx1.inputs[0][0], savefile)
+    addrfile.close()
+    savefile = open("tx.dat", "wb")
+    pickle.dump(Tx1, savefile)
+    savefile.close()
+
+    loadfile = open("public.dat", "rb")
+    new_pu = pickle.load(loadfile)
+##    loaded_pu = serialization.load_pem_public_key(
+##        new_pu,
+##        backend=default_backend()
+##    )
+    print(verify(message, sig, new_pu))
+    loadfile.close()
+    
+    loadfile = open("tx.dat", "rb")
+    newTx = pickle.load(loadfile)
+    loadfile.close()
+    
+    print(newTx.is_valid())
+
+
+
+
+
+    # saved and loaded new public key, then it could verify a new tx and we saved and loaded our new tx 

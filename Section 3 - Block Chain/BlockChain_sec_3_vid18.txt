@@ -1,0 +1,16 @@
+#Blockchain.py
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes
+digest = hashes.Hash(hashes.SHA256(), backend=default_backend)
+digest.update(b"abc")
+digest.update(b"123")
+hash = digest.finalize()
+print(hash)
+
+
+# small modification of the message produces thouroughly different output
+digest = hashes.Hash(hashes.SHA256(), backend=default_backend)
+digest.update(b"abc")
+digest.update(b"124")
+hash = digest.finalize()
+print(hash)
